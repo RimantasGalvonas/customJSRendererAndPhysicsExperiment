@@ -2,7 +2,6 @@ class CatThing extends Thing {
 	animationFrame = 0;
 	image = null;
 	catMovedThisFrame = false;
-	flipImage = 0;
 
 	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0, image) {
 		super(x, y, z, scaleX, scaleY, scaleZ);
@@ -24,18 +23,10 @@ class CatThing extends Thing {
 	renderOntoConvas(context, canvas, positionXInView, positionZInView, widthInPixels, heightInPixels) {
 
 		if (this.catMovedThisFrame) {
-			this.flipImage = 1 - this.flipImage;
+			//TODO: change animation frame
 		}
 
-		if (this.flipImage) {
-			context.translate(canvas.width, 0);
-			context.scale(-1, 1);
-			context.drawImage(this.image, positionXInView, positionZInView, widthInPixels, heightInPixels);
-			context.translate(canvas.width, 0);
-			context.scale(-1, 1);
-		} else {
-			context.drawImage(this.image, positionXInView, positionZInView, widthInPixels, heightInPixels);
-		}
+		context.drawImage(this.image, positionXInView, positionZInView, widthInPixels, heightInPixels);
 		
 	};
 }
