@@ -25,7 +25,7 @@ class Renderer {
 	};
 
 	//TODO: camera rotation
-	render = function() {
+	render() {
 		this.clearCanvas();
 		this.drawHorizon();
 
@@ -50,25 +50,15 @@ class Renderer {
 			let zOffset = this.getPerceivedScaleInPixels(cameraAndObjectHeightDifference, distanceFromCameraToObject);
 			let positionZInView = zCenterPosition - zOffset;
 
-			if (!object.image) {
-				this.context.beginPath();
-				this.context.rect(positionXInView, positionZInView, widthInPixels, heightInPixels);
-				this.context.fillStyle = "#8ED6FF";
-				this.context.fill();
-				this.context.lineWidth = 2;
-				this.context.strokeStyle = "black";
-				this.context.stroke();
-			} else {
-				this.context.drawImage(object.image, positionXInView, positionZInView, widthInPixels, heightInPixels);
-			}
+			object.renderOntoConvas(this.context, this.canvas, positionXInView, positionZInView, widthInPixels, heightInPixels);
 		})
 	};
 
-	clearCanvas = function() {
-		this.context.clearRect(0, 0, canvas.width, canvas.height);
+	clearCanvas() {
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	};
 
-	drawHorizon = function() {
+	drawHorizon() {
 		this.context.beginPath();
 		this.context.lineWidth = 1;
 		this.context.moveTo(0, canvas.height / 2);
@@ -76,7 +66,7 @@ class Renderer {
 		this.context.stroke(); 
 	};
 
-	getObjectsSortedByPositionToCamera = function() {
+	getObjectsSortedByPositionToCamera() {
 		// concat is to clone the array instead of modifying the original because dumb fucking javascript
 		// sort objects by furthest away so that they are rendered first and the closer ones are rendered over them.
 		// TODO: remove things behind camera
@@ -85,7 +75,7 @@ class Renderer {
 		});
 	};
 
-	getPerceivedScaleInPixels = function(size, distance) {
+	getPerceivedScaleInPixels(size, distance) {
 		// https://www.easycalculation.com/algebra/angular-diameter-calculator.php
 		// * (180/Math.PI) thing is rad -> degree conversion
 		let angularSize = 2 * Math.atan(size / (2 * distance)) * (180 / Math.PI);

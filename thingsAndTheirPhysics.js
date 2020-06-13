@@ -9,17 +9,16 @@ class Thing {
 	physicsModule = null;
 	attachedCamera = null;
 
-	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0, image) {
+	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0) {
 		this.positionX = x;
 		this.positionY = y;
 		this.positionZ = z;
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
 		this.scaleZ = scaleZ;
-		this.image = image;
 	};
 
-	calculateNewPosition = function() {
+	calculateNewPosition() {
 		if (!this.physicsModule) {
 			return;
 		}
@@ -38,6 +37,17 @@ class Thing {
 			this.attachedCamera.positionZ = this.positionZ - attachedCameraOffsetZ;
 		}
 	};
+
+	renderOntoConvas(context, canvas, positionXInView, positionZInView, widthInPixels, heightInPixels) {
+		// default blue rectangle, for testing
+		context.beginPath();
+		context.rect(positionXInView, positionZInView, widthInPixels, heightInPixels);
+		context.fillStyle = "#8ED6FF";
+		context.fill();
+		context.lineWidth = 2;
+		context.strokeStyle = "black";
+		context.stroke();
+	};
 };
 
 class PhysicsModuleForObject {
@@ -55,7 +65,7 @@ class PhysicsModuleForObject {
 		object.physicsModule = this;
 	};
 
-	calculateNewPosition = function() { // TODO: needs refactoring a lot
+	calculateNewPosition() { // TODO: needs refactoring a lot
 		let object = this.object;
 
 		if (object.positionZ <= 0) {

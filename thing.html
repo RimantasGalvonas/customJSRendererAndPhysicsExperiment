@@ -4,6 +4,7 @@
 		<title>Thing</title>
 		<script src="cameraAndRenderer.js"></script>
 		<script src="thingsAndTheirPhysics.js"></script>
+		<script src="catThing.js"></script>
 	</head>
 	<body>
 		<img id="playerImage" src="kat.png" hidden>
@@ -34,7 +35,7 @@
 			physicsModuleForThing2.velocityY = 10;
 			physicsModuleForThing2.velocityX = 10;
 	
-			playerThing = new Thing(0, -2, 0, 0.5, 1, 1);
+			playerThing = new CatThing(0, -2, 0, 0.5, 1, 1);
 			playerThing.image = document.getElementById('playerImage');
 			physicsModuleForPlayerThing = new PhysicsModuleForObject(playerThing);
 			physicsModuleForPlayerThing.drag = 0.15;
