@@ -50,13 +50,17 @@ class Renderer {
 			let zOffset = this.getPerceivedScaleInPixels(cameraAndObjectHeightDifference, distanceFromCameraToObject);
 			let positionZInView = zCenterPosition - zOffset;
 
-			this.context.beginPath();
-			this.context.rect(positionXInView, positionZInView, widthInPixels, heightInPixels);
-			this.context.fillStyle = "#8ED6FF";
-			this.context.fill();
-			this.context.lineWidth = 2;
-			this.context.strokeStyle = "black";
-			this.context.stroke();
+			if (!object.image) {
+				this.context.beginPath();
+				this.context.rect(positionXInView, positionZInView, widthInPixels, heightInPixels);
+				this.context.fillStyle = "#8ED6FF";
+				this.context.fill();
+				this.context.lineWidth = 2;
+				this.context.strokeStyle = "black";
+				this.context.stroke();
+			} else {
+				this.context.drawImage(object.image, positionXInView, positionZInView, widthInPixels, heightInPixels);
+			}
 		})
 	};
 

@@ -5,16 +5,18 @@ class Thing {
 	scaleX = 0;
 	scaleY = 0;
 	scaleZ = 0;
+	image = null;
 	physicsModule = null;
 	attachedCamera = null;
 
-	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0) {
+	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0, image) {
 		this.positionX = x;
 		this.positionY = y;
 		this.positionZ = z;
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
 		this.scaleZ = scaleZ;
+		this.image = image;
 	};
 
 	calculateNewPosition = function() {

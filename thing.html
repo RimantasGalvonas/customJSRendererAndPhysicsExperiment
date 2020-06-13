@@ -6,13 +6,18 @@
 		<script src="thingsAndTheirPhysics.js"></script>
 	</head>
 	<body>
-		<canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas>
-		<button onclick="playerThing.physicsModule.velocityY=-10">Forward</button>
-		<button onclick="playerThing.physicsModule.velocityY=10">Backward</button>
-		<button onclick="playerThing.physicsModule.velocityX=-10">Left</button>
-		<button onclick="playerThing.physicsModule.velocityX=10">Right</button>
-		<button onclick="playerThing.physicsModule.velocityZ=5">Jump</button>
-		<button onclick="changeCamera()">Change camera</button>
+		<img id="playerImage" src="kat.png" hidden>
+		<div>
+			<canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas>
+		</div>
+		<div>
+			<button onclick="playerThing.physicsModule.velocityY=-10">Forward</button>
+			<button onclick="playerThing.physicsModule.velocityY=10">Backward</button>
+			<button onclick="playerThing.physicsModule.velocityX=-10">Left</button>
+			<button onclick="playerThing.physicsModule.velocityX=10">Right</button>
+			<button onclick="playerThing.physicsModule.velocityZ=5">Jump</button>
+			<button onclick="changeCamera()">Change camera</button>
+		</div>
 		<script>
 			fps = 60;
 
@@ -29,7 +34,8 @@
 			physicsModuleForThing2.velocityY = 10;
 			physicsModuleForThing2.velocityX = 10;
 	
-			playerThing = new Thing(0, -2, 0, 1, 1, 1);
+			playerThing = new Thing(0, -2, 0, 0.5, 1, 1);
+			playerThing.image = document.getElementById('playerImage');
 			physicsModuleForPlayerThing = new PhysicsModuleForObject(playerThing);
 			physicsModuleForPlayerThing.drag = 0.15;
 
