@@ -12,6 +12,7 @@
 		<button onclick="playerThing.physicsModule.velocityX=-10">Left</button>
 		<button onclick="playerThing.physicsModule.velocityX=10">Right</button>
 		<button onclick="playerThing.physicsModule.velocityZ=5">Jump</button>
+		<button onclick="changeCamera()">Change camera</button>
 		<script>
 			fps = 60;
 
@@ -19,29 +20,49 @@
 
 			var objects = [];
 
-			thing1 = new Thing(0, -30, 10, 2, 2, 5);
-			physicsModuleForThing1 = new PhysicsModuleForObject(thing1);		
+			var thing1 = new Thing(0, -30, 10, 2, 2, 5);
+			var physicsModuleForThing1 = new PhysicsModuleForObject(thing1);		
 
-			thing2 = new Thing(-10, -20, 5, 2, 2, 5);
-			physicsModuleForThing2 = new PhysicsModuleForObject(thing2);
+			var thing2 = new Thing(-10, -20, 5, 2, 2, 5);
+			var physicsModuleForThing2 = new PhysicsModuleForObject(thing2);
 			physicsModuleForThing2.velocityZ = 5;
 			physicsModuleForThing2.velocityY = 10;
 			physicsModuleForThing2.velocityX = 10;
 	
-			
-			playerThing = new Thing(0, -5, 0, 1, 1, 1);
+			playerThing = new Thing(0, -2, 0, 1, 1, 1);
 			physicsModuleForPlayerThing = new PhysicsModuleForObject(playerThing);
 			physicsModuleForPlayerThing.drag = 0.15;
 
+			var cameras = [];
+			var staticCamera = new Camera(0, 0, 1.6);
+			var chaseCamera = new Camera(0, 0, 1.6);
+			playerThing.attachedCamera = chaseCamera;
+			cameras.push(staticCamera, chaseCamera);
+
 			objects.push(thing1, thing2, playerThing);
 
-			var camera = new Camera(0, 0, 1.6);
-
-			var renderer = new Renderer(canvas, objects, camera);
+			var renderer = new Renderer(canvas, objects, chaseCamera);
+			var currentCamera = 1;
 
 			setInterval(function() {
 				renderer.render();
+
+				//The physics part
+				objects.forEach((object) => {
+					object.calculateNewPosition();
+				});
+
 			}, 1000/fps);
+
+			function changeCamera() {
+				if (currentCamera < cameras.length - 1) {
+					currentCamera++;
+				} else {
+					currentCamera = 0;
+				}
+
+				renderer.camera = cameras[currentCamera];
+			}
 		</script>
 	</body>
 </html>

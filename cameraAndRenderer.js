@@ -33,17 +33,20 @@ class Renderer {
 
 		sortedObjects.forEach((object) => {
 			// TODO take camera position into account, something with pythagoras theorem probably
-			let distanceFromCameraToObject = Math.abs(camera.positionY - object.positionY);
+			let distanceFromCameraToObject = this.camera.positionY - object.positionY;
+			if (distanceFromCameraToObject < 0) {
+				return;
+			}
 
 			// for checking check: https://sizecalc.com/#distance=10meters&physical-size=5meters&perceived-size-units=degrees
 			let widthInPixels = this.getPerceivedScaleInPixels(object.scaleX, distanceFromCameraToObject);
 			let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, distanceFromCameraToObject);
 
 			let xCenterPosition = this.canvas.width / 2 - widthInPixels / 2;
-			let xOffset = this.getPerceivedScaleInPixels(object.positionX, distanceFromCameraToObject);
+			let xOffset = this.getPerceivedScaleInPixels(object.positionX - this.camera.positionX, distanceFromCameraToObject);
 			let positionXInView = xCenterPosition + xOffset;
 			let zCenterPosition = canvas.height / 2 - heightInPixels;
-			let cameraAndObjectHeightDifference = object.positionZ - camera.positionZ;
+			let cameraAndObjectHeightDifference = object.positionZ - this.camera.positionZ;
 			let zOffset = this.getPerceivedScaleInPixels(cameraAndObjectHeightDifference, distanceFromCameraToObject);
 			let positionZInView = zCenterPosition - zOffset;
 
@@ -54,8 +57,6 @@ class Renderer {
 			this.context.lineWidth = 2;
 			this.context.strokeStyle = "black";
 			this.context.stroke();
-
-			object.calculateNewPosition();
 		})
 	};
 

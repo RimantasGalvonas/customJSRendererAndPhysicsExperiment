@@ -6,7 +6,7 @@ class Thing {
 	scaleY = 0;
 	scaleZ = 0;
 	physicsModule = null;
-	
+	attachedCamera = null;
 
 	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0) {
 		this.positionX = x;
@@ -22,7 +22,19 @@ class Thing {
 			return;
 		}
 
+		if (this.attachedCamera) {
+			var attachedCameraOffsetX = this.positionX - this.attachedCamera.positionX;
+			var attachedCameraOffsetY = this.positionY - this.attachedCamera.positionY;
+			var attachedCameraOffsetZ = this.positionZ - this.attachedCamera.positionZ;
+		}
+
 		this.physicsModule.calculateNewPosition();
+
+		if (this.attachedCamera) {
+			this.attachedCamera.positionX = this.positionX + attachedCameraOffsetX;
+			this.attachedCamera.positionY = this.positionY - attachedCameraOffsetY;
+			this.attachedCamera.positionZ = this.positionZ - attachedCameraOffsetZ;
+		}
 	};
 };
 
