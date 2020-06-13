@@ -24,16 +24,8 @@
 
 			var canvas = document.getElementById("myCanvas");
 
-			var objects = [];
+			var objects = generateBlocks();	
 
-			var thing1 = new Thing(0, -30, 10, 2, 2, 5);
-			var physicsModuleForThing1 = new PhysicsModuleForObject(thing1);		
-
-			var thing2 = new Thing(-10, -20, 5, 2, 2, 5);
-			var physicsModuleForThing2 = new PhysicsModuleForObject(thing2);
-			physicsModuleForThing2.velocityZ = 5;
-			physicsModuleForThing2.velocityY = 10;
-			physicsModuleForThing2.velocityX = 10;
 	
 			playerThing = new CatThing(0, -2, 0, 0.5, 1, 1);
 			playerThing.image = document.getElementById('playerImage');
@@ -46,7 +38,7 @@
 			playerThing.attachedCamera = chaseCamera;
 			cameras.push(staticCamera, chaseCamera);
 
-			objects.push(thing1, thing2, playerThing);
+			objects.push(playerThing);
 
 			var renderer = new Renderer(canvas, objects, chaseCamera);
 			var currentCamera = 1;
@@ -69,6 +61,36 @@
 				}
 
 				renderer.camera = cameras[currentCamera];
+			}
+
+			function generateBlocks()
+			{
+				var things = [];
+
+				var thing1 = new Thing(0, -30, 10, 2, 2, 5);
+				var physicsModuleForThing1 = new PhysicsModuleForObject(thing1);		
+
+				var thing2 = new Thing(-10, -20, 5, 2, 2, 5);
+				var physicsModuleForThing2 = new PhysicsModuleForObject(thing2);
+				physicsModuleForThing2.velocityZ = 5;
+				physicsModuleForThing2.velocityY = 10;
+				physicsModuleForThing2.velocityX = 10;
+
+				things.push(thing1, thing2);
+
+				var step = 360/12;
+				var currentDegree = 15;
+				var radius = 10;
+				while (currentDegree < 360) {
+					let posX = radius * Math.sin(currentDegree * Math.PI / 180);
+					let posY = radius * Math.cos(currentDegree * Math.PI / 180);
+					let circleThing = new Thing(posX, -30 + posY, 5, 2, 2, 3);
+					let physicsForCircleThing = new PhysicsModuleForObject(circleThing);
+					things.push(circleThing);
+					currentDegree += step;
+				}
+
+				return things;
 			}
 		</script>
 	</body>
