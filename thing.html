@@ -1,0 +1,47 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Thing</title>
+		<script src="cameraAndRenderer.js"></script>
+		<script src="thingsAndTheirPhysics.js"></script>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas>
+		<button onclick="playerThing.physicsModule.velocityY=-10">Forward</button>
+		<button onclick="playerThing.physicsModule.velocityY=10">Backward</button>
+		<button onclick="playerThing.physicsModule.velocityX=-10">Left</button>
+		<button onclick="playerThing.physicsModule.velocityX=10">Right</button>
+		<button onclick="playerThing.physicsModule.velocityZ=5">Jump</button>
+		<script>
+			fps = 60;
+
+			var canvas = document.getElementById("myCanvas");
+
+			var objects = [];
+
+			thing1 = new Thing(0, -30, 10, 2, 2, 5);
+			physicsModuleForThing1 = new PhysicsModuleForObject(thing1);		
+
+			thing2 = new Thing(-10, -20, 5, 2, 2, 5);
+			physicsModuleForThing2 = new PhysicsModuleForObject(thing2);
+			physicsModuleForThing2.velocityZ = 5;
+			physicsModuleForThing2.velocityY = 10;
+			physicsModuleForThing2.velocityX = 10;
+	
+			
+			playerThing = new Thing(0, -5, 0, 1, 1, 1);
+			physicsModuleForPlayerThing = new PhysicsModuleForObject(playerThing);
+			physicsModuleForPlayerThing.drag = 0.15;
+
+			objects.push(thing1, thing2, playerThing);
+
+			var camera = new Camera(0, 0, 1.6);
+
+			var renderer = new Renderer(canvas, objects, camera);
+
+			setInterval(function() {
+				renderer.render();
+			}, 1000/fps);
+		</script>
+	</body>
+</html>
