@@ -25,16 +25,16 @@ class Thing {
 
 		if (this.attachedCamera) {
 			var attachedCameraOffsetX = this.positionX - this.attachedCamera.positionX;
-			var attachedCameraOffsetY = this.positionY - this.attachedCamera.positionY;
-			var attachedCameraOffsetZ = this.positionZ - this.attachedCamera.positionZ;
+			var attachedCameraOffsetY = this.attachedCamera.positionY - this.positionY;
+			var attachedCameraOffsetZ = this.attachedCamera.positionZ - this.positionZ;
 		}
 
 		this.physicsModule.calculateNewPosition();
 
 		if (this.attachedCamera) {
-			this.attachedCamera.positionX = this.positionX + attachedCameraOffsetX;
-			this.attachedCamera.positionY = this.positionY - attachedCameraOffsetY;
-			this.attachedCamera.positionZ = this.positionZ - attachedCameraOffsetZ;
+			this.attachedCamera.positionX = this.positionX - attachedCameraOffsetX;
+			this.attachedCamera.positionY = this.positionY + attachedCameraOffsetY;
+			this.attachedCamera.positionZ = this.positionZ + attachedCameraOffsetZ;
 		}
 	};
 

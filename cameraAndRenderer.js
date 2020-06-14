@@ -1,7 +1,8 @@
 class Camera {
-	positionX = null;
-	positionY = null;
-	positionZ = null;
+	positionX = 0;
+	positionY = 0;
+	positionZ = 0;
+	rotationZ = 0;
 	fieldOfView = 90;
 
 	constructor (x = 0, y = 0, z = 0) {
@@ -24,28 +25,40 @@ class Renderer {
 		this.camera = camera;
 	};
 
-	//TODO: camera rotation
 	render() {
 		this.clearCanvas();
 		this.drawHorizon();
-
+		this.assignObjectsCoordinatesRelativeToCamera();
 		let sortedObjects = this.getObjectsSortedByPositionToCamera();
 
 		sortedObjects.forEach((object) => {
-			// TODO take camera position into account, something with pythagoras theorem probably
-			let distanceFromCameraToObject = this.camera.positionY - object.positionY;
-			if (distanceFromCameraToObject < 0) {
+			let xOffsetFromCamera = object.positionXRelativeToCamera;
+			let yOffsetFromCamera = object.positionYRelativeToCamera;
+			let distanceFromCameraToObject = Math.hypot(xOffsetFromCamera, yOffsetFromCamera);
+
+			if (yOffsetFromCamera < 0) {
 				return;
 			}
 
-			// for checking check: https://sizecalc.com/#distance=10meters&physical-size=5meters&perceived-size-units=degrees
+			// for checking: https://sizecalc.com/#distance=10meters&physical-size=5meters&perceived-size-units=degrees
 			let widthInPixels = this.getPerceivedScaleInPixels(object.scaleX, distanceFromCameraToObject);
-			let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, distanceFromCameraToObject);
+			let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, distanceFromCameraToObject);			
+			
+			let sinOfAngle = xOffsetFromCamera / Math.hypot(xOffsetFromCamera, yOffsetFromCamera);
+			let angleToGlobal = this.radiansToDegrees(Math.asin(sinOfAngle));
+			let angleToCamera = angleToGlobal
 
-			let xCenterPosition = this.canvas.width / 2 - widthInPixels / 2;
-			let xOffset = this.getPerceivedScaleInPixels(object.positionX - this.camera.positionX, distanceFromCameraToObject);
-			let positionXInView = xCenterPosition + xOffset;
-			let zCenterPosition = canvas.height / 2 - heightInPixels;
+			if (Math.abs(angleToCamera) > this.camera.fieldOfView / 2) {
+				return;
+			}
+
+			angleToCamera = angleToCamera * 180 / this.camera.fieldOfView;
+			sinOfAngle = Math.sin(this.degreesToRadians(angleToCamera));
+			
+			// TODO: something needs to be fixed here as objects closer to the edge of screen get their angles fucked
+			let positionXInView = canvas.width / 2 * (1 + sinOfAngle) - widthInPixels / 2;
+			
+ 			let zCenterPosition = canvas.height / 2 - heightInPixels;
 			let cameraAndObjectHeightDifference = object.positionZ - this.camera.positionZ;
 			let zOffset = this.getPerceivedScaleInPixels(cameraAndObjectHeightDifference, distanceFromCameraToObject);
 			let positionZInView = zCenterPosition - zOffset;
@@ -66,20 +79,39 @@ class Renderer {
 		this.context.stroke(); 
 	};
 
-	getObjectsSortedByPositionToCamera() {
-		// concat is to clone the array instead of modifying the original because dumb fucking javascript
-		// sort objects by furthest away so that they are rendered first and the closer ones are rendered over them.
-		// TODO: remove things behind camera
-		return this.objects.concat().sort(function(a, b) {
-		    return a.positionY - b.positionY; // TODO: gotta be relative to the camera obviously
+	assignObjectsCoordinatesRelativeToCamera() {
+
+		var cameraAngle = this.degreesToRadians(this.camera.rotationZ);
+		var cameraPositionX = this.camera.positionX;
+		var cameraPositionY = this.camera.positionY;
+		this.objects.forEach((object) => {
+			let xOffsetFromCamera = object.positionX - this.camera.positionX;
+			let yOffsetFromCamera = object.positionY - this.camera.positionY;
+			object.positionXRelativeToCamera = xOffsetFromCamera * Math.cos(cameraAngle) - yOffsetFromCamera * Math.sin(cameraAngle);
+			object.positionYRelativeToCamera = xOffsetFromCamera * Math.sin(cameraAngle) + yOffsetFromCamera * Math.cos(cameraAngle);
 		});
 	};
 
+	getObjectsSortedByPositionToCamera() {
+		// Sorts objects by furthest away so that they are rendered first and the closer ones are rendered over them.
+		// concat is to clone the array instead of modifying the original because dumb fucking javascript
+		return this.objects.concat().sort(function(a, b) {
+		    return b.positionYRelativeToCamera - a.positionYRelativeToCamera;
+		});
+	}
+
 	getPerceivedScaleInPixels(size, distance) {
 		// https://www.easycalculation.com/algebra/angular-diameter-calculator.php
-		// * (180/Math.PI) thing is rad -> degree conversion
-		let angularSize = 2 * Math.atan(size / (2 * distance)) * (180 / Math.PI);
+		let angularSize = this.radiansToDegrees(2 * Math.atan(size / (2 * distance)));
 
 		return this.canvas.width * angularSize / this.camera.fieldOfView;
 	};
+
+	radiansToDegrees(rad) {
+		return rad * 180 / Math.PI;
+	}
+
+	degreesToRadians(deg) {
+		return deg * Math.PI / 180;
+	}
 }
