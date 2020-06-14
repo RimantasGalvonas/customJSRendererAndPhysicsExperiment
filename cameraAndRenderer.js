@@ -45,7 +45,7 @@ class Renderer {
 			let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, distanceFromCameraToObject);		
 			
 			let sinOfAngle = xOffsetFromCamera / Math.hypot(xOffsetFromCamera, yOffsetFromCamera);
-			let angleToCamera = this.radiansToDegrees(Math.asin(sinOfAngle));
+			let angleToCamera = MathHelper.radiansToDegrees(Math.asin(sinOfAngle));
 
 
 			if (Math.abs(angleToCamera) > this.camera.fieldOfView / 2) {
@@ -59,7 +59,7 @@ class Renderer {
 			let zOffset = this.getPerceivedScaleInPixels(cameraAndObjectHeightDifference, distanceFromCameraToObject);
 			let positionZInView = zCenterPosition - zOffset;
 
-			object.renderOntoConvas(this.context, this.canvas, positionXInView, positionZInView, widthInPixels, heightInPixels);
+			object.renderOntoCanvas(this.context, this.canvas, positionXInView, positionZInView, widthInPixels, heightInPixels);
 		})
 	};
 
@@ -76,15 +76,14 @@ class Renderer {
 	};
 
 	assignObjectsCoordinatesRelativeToCamera() {
-
-		var cameraAngle = this.degreesToRadians(this.camera.rotationZ);
 		var cameraPositionX = this.camera.positionX;
 		var cameraPositionY = this.camera.positionY;
 		this.objects.forEach((object) => {
 			let xOffsetFromCamera = object.positionX - this.camera.positionX;
 			let yOffsetFromCamera = object.positionY - this.camera.positionY;
-			object.positionXRelativeToCamera = xOffsetFromCamera * Math.cos(cameraAngle) - yOffsetFromCamera * Math.sin(cameraAngle);
-			object.positionYRelativeToCamera = xOffsetFromCamera * Math.sin(cameraAngle) + yOffsetFromCamera * Math.cos(cameraAngle);
+			let rotatedOffsets = MathHelper.rotateCoordinates(xOffsetFromCamera, yOffsetFromCamera, this.camera.rotationZ);
+			object.positionXRelativeToCamera = rotatedOffsets.x;
+			object.positionYRelativeToCamera = rotatedOffsets.y;
 		});
 	};
 
@@ -98,16 +97,8 @@ class Renderer {
 
 	getPerceivedScaleInPixels(size, distance) {
 		// https://www.easycalculation.com/algebra/angular-diameter-calculator.php
-		let angularSize = this.radiansToDegrees(2 * Math.atan(size / (2 * distance)));
+		let angularSize = MathHelper.radiansToDegrees(2 * Math.atan(size / (2 * distance)));
 
 		return this.canvas.width * angularSize / this.camera.fieldOfView;
 	};
-
-	radiansToDegrees(rad) {
-		return rad * 180 / Math.PI;
-	}
-
-	degreesToRadians(deg) {
-		return deg * Math.PI / 180;
-	}
 }

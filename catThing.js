@@ -20,7 +20,7 @@ class CatThing extends Thing {
 		}
 	};
 
-	renderOntoConvas(context, canvas, positionXInView, positionZInView, widthInPixels, heightInPixels) {
+	renderOntoCanvas(context, canvas, positionXInView, positionZInView, widthInPixels, heightInPixels) {
 
 		if (this.catMovedThisFrame) {
 			//TODO: change animation frame

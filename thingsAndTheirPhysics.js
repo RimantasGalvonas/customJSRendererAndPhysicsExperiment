@@ -2,6 +2,7 @@ class Thing {
 	positionX = 0;
 	positionY = 0;
 	positionZ = 0;
+	rotationZ = 0;
 	scaleX = 0;
 	scaleY = 0;
 	scaleZ = 0;
@@ -18,7 +19,7 @@ class Thing {
 		this.scaleZ = scaleZ;
 	};
 
-	calculateNewPosition() {
+	calculateNewPosition() { // TODO: observer pattern or something would be good here
 		if (!this.physicsModule) {
 			return;
 		}
@@ -32,13 +33,23 @@ class Thing {
 		this.physicsModule.calculateNewPosition();
 
 		if (this.attachedCamera) {
-			this.attachedCamera.positionX = this.positionX - attachedCameraOffsetX;
-			this.attachedCamera.positionY = this.positionY + attachedCameraOffsetY;
+			let newRotation = this.rotationZ - this.attachedCamera.rotationZ;
+			if (!newRotation) {
+				this.attachedCamera.positionX = this.positionX - attachedCameraOffsetX;
+				this.attachedCamera.positionY = this.positionY + attachedCameraOffsetY;
+				this.attachedCamera.positionZ = this.positionZ + attachedCameraOffsetZ;
+				return;
+			}
+			this.attachedCamera.rotationZ = this.rotationZ;
+			let rotatedOffset = MathHelper.rotateCoordinates(attachedCameraOffsetX, attachedCameraOffsetY, newRotation);
+			this.attachedCamera.positionX = this.positionX - rotatedOffset.x
+			this.attachedCamera.positionY = this.positionY + rotatedOffset.y;
 			this.attachedCamera.positionZ = this.positionZ + attachedCameraOffsetZ;
+		
 		}
 	};
 
-	renderOntoConvas(context, canvas, positionXInView, positionZInView, widthInPixels, heightInPixels) {
+	renderOntoCanvas(context, canvas, positionXInView, positionZInView, widthInPixels, heightInPixels) {
 		// default blue rectangle, for testing
 		context.beginPath();
 		context.rect(positionXInView, positionZInView, widthInPixels, heightInPixels);
@@ -63,7 +74,15 @@ class PhysicsModuleForObject {
 	constructor (object) {
 		this.object = object;
 		object.physicsModule = this;
-	};
+	}
+
+	applyVelocityConvertedToGlobalVectors(angle, velocity) {
+		let velocityX = Math.sin(MathHelper.degreesToRadians(angle)) * velocity;
+		let velocityY = Math.cos(MathHelper.degreesToRadians(angle)) * velocity;
+		let rotatedVectors = MathHelper.rotateCoordinates(velocityX, velocityY, -this.object.rotationZ)
+		this.velocityX = rotatedVectors.x;
+		this.velocityY = rotatedVectors.y;
+	}
 
 	calculateNewPosition() { // TODO: needs refactoring a lot
 		let object = this.object;

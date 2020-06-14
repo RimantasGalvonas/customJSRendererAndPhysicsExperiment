@@ -5,6 +5,7 @@
 		<script src="cameraAndRenderer.js"></script>
 		<script src="thingsAndTheirPhysics.js"></script>
 		<script src="catThing.js"></script>
+		<script src="helpers.js"></script>
 	</head>
 	<body>
 		<img id="playerImage" src="kat.png" hidden>
@@ -12,16 +13,16 @@
 			<canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas>
 		</div>
 		<div>
-			<button onclick="playerThing.physicsModule.velocityY=10">Forward</button>
-			<button onclick="playerThing.physicsModule.velocityY=-10">Backward</button>
-			<button onclick="playerThing.physicsModule.velocityX=-10">Left</button>
-			<button onclick="playerThing.physicsModule.velocityX=10">Right</button>
+			<button onclick="playerThing.physicsModule.applyVelocityConvertedToGlobalVectors(0, 10);">Forward</button>
+			<button onclick="playerThing.physicsModule.applyVelocityConvertedToGlobalVectors(180, 10)">Backward</button>
+			<button onclick="playerThing.physicsModule.applyVelocityConvertedToGlobalVectors(270, 10)">Left</button>
+			<button onclick="playerThing.physicsModule.applyVelocityConvertedToGlobalVectors(90, 10)">Right</button>
 			<button onclick="playerThing.physicsModule.velocityZ=5">Jump</button>
 			<br>
 			<br>
 			<button onclick="changeCamera()">Change camera</button>
-			<button onclick="renderer.camera.rotationZ -= 5">Turn camera left</button>
-			<button onclick="renderer.camera.rotationZ += 5">Turn camera right</button>
+			<button onclick="playerThing.rotationZ -= 5">Turn left</button>
+			<button onclick="playerThing.rotationZ += 5">Turn right</button>
 		</div>
 		<script>
 			fps = 60;
@@ -91,8 +92,8 @@
 				var currentDegree = 15;
 				var radius = 10;
 				while (currentDegree < 360) {
-					let posX = radius * Math.sin(currentDegree * Math.PI / 180);
-					let posY = radius * Math.cos(currentDegree * Math.PI / 180);
+					let posX = radius * Math.sin(MathHelper.degreesToRadians(currentDegree));
+					let posY = radius * Math.cos(MathHelper.degreesToRadians(currentDegree));
 					let circleThing = new Thing(posX, 30 + posY, 5, 2, 2, 3);
 					let physicsForCircleThing = new PhysicsModuleForObject(circleThing);
 					things.push(circleThing);
