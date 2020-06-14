@@ -42,21 +42,17 @@ class Renderer {
 
 			// for checking: https://sizecalc.com/#distance=10meters&physical-size=5meters&perceived-size-units=degrees
 			let widthInPixels = this.getPerceivedScaleInPixels(object.scaleX, distanceFromCameraToObject);
-			let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, distanceFromCameraToObject);			
+			let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, distanceFromCameraToObject);		
 			
 			let sinOfAngle = xOffsetFromCamera / Math.hypot(xOffsetFromCamera, yOffsetFromCamera);
-			let angleToGlobal = this.radiansToDegrees(Math.asin(sinOfAngle));
-			let angleToCamera = angleToGlobal
+			let angleToCamera = this.radiansToDegrees(Math.asin(sinOfAngle));
+
 
 			if (Math.abs(angleToCamera) > this.camera.fieldOfView / 2) {
-				return;
+				//return; This doesn't work, but there should be something here to skip items that are not within the line of sight
 			}
 
-			angleToCamera = angleToCamera * 180 / this.camera.fieldOfView;
-			sinOfAngle = Math.sin(this.degreesToRadians(angleToCamera));
-			
-			// TODO: something needs to be fixed here as objects closer to the edge of screen get their angles fucked
-			let positionXInView = canvas.width / 2 * (1 + sinOfAngle) - widthInPixels / 2;
+			let positionXInView = canvas.width * (this.camera.fieldOfView/2 + angleToCamera) / this.camera.fieldOfView - widthInPixels / 2;
 			
  			let zCenterPosition = canvas.height / 2 - heightInPixels;
 			let cameraAndObjectHeightDifference = object.positionZ - this.camera.positionZ;
