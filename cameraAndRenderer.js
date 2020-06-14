@@ -42,7 +42,7 @@ class Renderer {
 
 			// for checking: https://sizecalc.com/#distance=10meters&physical-size=5meters&perceived-size-units=degrees
 			let widthInPixels = this.getPerceivedScaleInPixels(object.scaleX, distanceFromCameraToObject);
-			let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, distanceFromCameraToObject);		
+			let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, yOffsetFromCamera);		
 			
 			let sinOfAngle = xOffsetFromCamera / Math.hypot(xOffsetFromCamera, yOffsetFromCamera);
 			let angleToCamera = MathHelper.radiansToDegrees(Math.asin(sinOfAngle));
@@ -56,7 +56,7 @@ class Renderer {
 			
  			let zCenterPosition = canvas.height / 2 - heightInPixels;
 			let cameraAndObjectHeightDifference = object.positionZ - this.camera.positionZ;
-			let zOffset = this.getPerceivedScaleInPixels(cameraAndObjectHeightDifference, distanceFromCameraToObject);
+			let zOffset = this.getPerceivedScaleInPixels(cameraAndObjectHeightDifference, yOffsetFromCamera);
 			let positionZInView = zCenterPosition - zOffset;
 
 			object.renderOntoCanvas(this.context, this.canvas, positionXInView, positionZInView, widthInPixels, heightInPixels);
