@@ -21,8 +21,8 @@
 			<br>
 			<br>
 			<button onclick="changeCamera()">Change camera</button>
-			<button onclick="playerThing.rotationZ -= 5">Turn left</button>
-			<button onclick="playerThing.rotationZ += 5">Turn right</button>
+			<button id="turnLeftButton">Turn left</button>
+			<button id="turnRightButton">Turn right</button>
 		</div>
 		<script>
 			fps = 60;
@@ -31,6 +31,14 @@
 
 			var objects = generateBlocks();	
 
+			var turningLeft = false;
+			var turningRight = false;
+			var turnLeftButton = document.getElementById('turnLeftButton');
+			var turnRightButton = document.getElementById('turnRightButton');
+			turnLeftButton.addEventListener('mousedown', function(data) {turningLeft = true;});
+			turnLeftButton.addEventListener('mouseup', function(data) {turningLeft = false});
+			turnRightButton.addEventListener('mousedown', function(data) {turningRight = true;});
+			turnRightButton.addEventListener('mouseup', function(data) {turningRight = false});
 	
 			playerThing = new CatThing(0, 2, 0, 0.5, 1, 1);
 			playerThing.image = document.getElementById('playerImage');
@@ -51,12 +59,20 @@
 			var currentCamera = 1;
 
 			setInterval(function() {
+				if (turningLeft) {
+					playerThing.rotationZ--;
+				} else if (turningRight) {
+					playerThing.rotationZ++;
+				}
+
 				renderer.render();
 
 				//The physics part
 				objects.forEach((object) => {
 					object.calculateNewPosition();
 				});
+
+
 
 			}, 1000/fps);
 
