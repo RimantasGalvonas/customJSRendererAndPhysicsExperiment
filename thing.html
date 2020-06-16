@@ -6,6 +6,7 @@
 		<script src="thingsAndTheirPhysics.js"></script>
 		<script src="catThing.js"></script>
 		<script src="helpers.js"></script>
+		<script src="controller.js"></script>
 	</head>
 	<body>
 		<img id="playerImage" src="kat.png" hidden>
@@ -13,16 +14,16 @@
 			<canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas>
 		</div>
 		<div>
-			<button onclick="playerThing.physicsModule.applyVelocityConvertedToGlobalVectors(0, 10);">Forward</button>
-			<button onclick="playerThing.physicsModule.applyVelocityConvertedToGlobalVectors(180, 10)">Backward</button>
-			<button onclick="playerThing.physicsModule.applyVelocityConvertedToGlobalVectors(270, 10)">Left</button>
-			<button onclick="playerThing.physicsModule.applyVelocityConvertedToGlobalVectors(90, 10)">Right</button>
-			<button onclick="playerThing.physicsModule.velocityZ=5">Jump</button>
+			<button id="forwardButton" user-select="none">Forward</button>
+			<button id="backwardButton" user-select="none">Backward</button>
+			<button id="leftButton" user-select="none">Left</button>
+			<button id="rightButton" user-select="none">Right</button>
+			<button id="jumpButton" user-select="none">Jump</button>
 			<br>
 			<br>
 			<button onclick="changeCamera()">Change camera</button>
-			<button id="turnLeftButton">Turn left</button>
-			<button id="turnRightButton">Turn right</button>
+			<button id="turnLeftButton" user-select="none">Turn left</button>
+			<button id="turnRightButton" user-select="none">Turn right</button>
 		</div>
 		<script>
 			fps = 60;
@@ -33,12 +34,9 @@
 
 			var turningLeft = false;
 			var turningRight = false;
-			var turnLeftButton = document.getElementById('turnLeftButton');
-			var turnRightButton = document.getElementById('turnRightButton');
-			turnLeftButton.addEventListener('mousedown', function(data) {turningLeft = true;});
-			turnLeftButton.addEventListener('mouseup', function(data) {turningLeft = false});
-			turnRightButton.addEventListener('mousedown', function(data) {turningRight = true;});
-			turnRightButton.addEventListener('mouseup', function(data) {turningRight = false});
+
+			
+
 	
 			playerThing = new CatThing(0, 2, 0, 0.5, 1, 1);
 			playerThing.image = document.getElementById('playerImage');
@@ -58,12 +56,18 @@
 			var renderer = new Renderer(canvas, objects, chaseCamera);
 			var currentCamera = 1;
 
+			var controller = new Controller();
+			controller.object = playerThing;
+			controller.initTurnCCWButton(document.getElementById('turnLeftButton'));
+			controller.initTurnCWButton(document.getElementById('turnRightButton'));
+			controller.initForwardButton(document.getElementById('forwardButton'));
+			controller.initBackwardButton(document.getElementById('backwardButton'));
+			controller.initLeftButton(document.getElementById('leftButton'));
+			controller.initRightButton(document.getElementById('rightButton'));
+			controller.initJumpButton(document.getElementById('jumpButton'));
+
 			setInterval(function() {
-				if (turningLeft) {
-					playerThing.rotationZ--;
-				} else if (turningRight) {
-					playerThing.rotationZ++;
-				}
+				controller.control();
 
 				renderer.render();
 
