@@ -30,6 +30,9 @@ class Renderer {
 		this.drawHorizon();
 		this.assignObjectsCoordinatesRelativeToCamera();
 		this.drawGrid();
+		this.buildCube();
+		this.buildCone();
+
 
 		let sortedObjects = this.getObjectsSortedByPositionToCamera();
 
@@ -65,6 +68,97 @@ class Renderer {
 		})
 	};
 
+	buildCone() {
+		var step = 360/12;
+		var currentDegree = 15;
+		var radius = 10;
+		var centerX = 20;
+		var centerY = 50;
+		var height = 10;
+
+		while (currentDegree < 360) {
+				let posX = centerX + radius / 2 * Math.sin(MathHelper.degreesToRadians(currentDegree));
+				let posY = centerY + radius / 2 * Math.cos(MathHelper.degreesToRadians(currentDegree));
+
+				this.drawLineWithSubdivision(posX, posY, 0, centerX, centerY, height, 'hsla(0, 0%, 0%, 0.5)');
+
+			currentDegree += step;
+		}
+	}
+
+	buildCube() {
+		let startY;
+		let startZ;
+		let startPositionInView;
+
+		let endX;
+		let endY;
+		let endZ;
+		let endPositionInView;
+
+		let lines = [
+			{
+				ax: -5, ay: -15, az: 0,
+				bx: -5, by: -15, bz: 5
+			},
+			{
+				ax: -5, ay: -10, az: 5,
+				bx: -5, by: -10, bz: 0
+			},
+			{
+				ax: 0, ay: -15, az: 5,
+				bx: 0, by: -15, bz: 0
+			},
+			{
+				ax: 0, ay: -10, az: 5,
+				bx: 0, by: -10, bz: 0
+			},
+			{
+				ax: -5, ay: -10, az: 0,
+				bx: 0, by: -10, bz: 0
+			},
+			{
+				ax: -5, ay: -15, az: 0,
+				bx: 0, by: -15, bz: 0
+			},
+			{
+				ax: -5, ay: -10, az: 0,
+				bx: -5, by: -15, bz: 0
+			},
+			{
+				ax: 0, ay: -10, az: 0,
+				bx: 0, by: -15, bz: 0
+			},
+			{
+				ax: -5, ay: -10, az: 5,
+				bx: 0, by: -10, bz: 5
+			},
+			{
+				ax: -5, ay: -15, az: 5,
+				bx: 0, by: -15, bz: 5
+			},
+			{
+				ax: -5, ay: -10, az: 5,
+				bx: -5, by: -15, bz: 5
+			},
+			{
+				ax: 0, ay: -10, az: 5,
+				bx: 0, by: -15, bz: 5
+			}
+
+
+		];
+
+		lines.forEach((line) => {
+			if (this.isBehindCamera(line.ax-20, line.ay+50) && this.isBehindCamera(line.bx-20, line.by+50)) {
+				return;
+			}
+
+			this.drawLineWithSubdivision(line.ax-20, line.ay+50, line.az, line.bx-20, line.by+50, line.bz, 'hsla(0, 0%, 0%, 0.5)');			
+		});
+
+	}
+
 	drawGrid() {
 		var totalDistance = 10;
 		var step = 1;
@@ -88,30 +182,36 @@ class Renderer {
 	}
 
 	/*
-	 * Doesn't draw completely vertical lines. Subdivision might need optimisation - no need for small subdivisions far away
+	 * Needs optimisation maybe
 	 */
 	drawLineWithSubdivision(startX, startY, startZ, endX, endY, endZ, color = 'hsla(0, 0%, 0%, 0.5)') {
 		let lineXLength = endX - startX;
 		let lineYLength = endY - startY;
 		let lineZLength = endZ - startZ;
-		let totalLength = Math.hypot(lineXLength, lineYLength); //No z axis here, might need fixing
+		let totalLength = Math.hypot(lineZLength, Math.hypot(lineXLength, lineYLength));
 		let numberOfSubdivisions = totalLength * 3;
 		let subdivisionXLength;
 		let subdivisionYLength;
 		let subdivisionZLength;
 
-		if (Math.abs(lineXLength) > Math.abs(lineYLength)) {
+		if (Math.abs(lineXLength) > Math.abs(lineYLength) && Math.abs(lineXLength) > Math.abs(lineZLength)) { // Use the longest axis for slope calculation
 			let x_y_slope = lineYLength / lineXLength;
 			let x_z_slope = lineZLength == 0 ? 0 : lineXLength / lineZLength;
 			subdivisionXLength = lineXLength / numberOfSubdivisions;
 			subdivisionYLength = x_y_slope == 0 ? 0 : subdivisionXLength / x_y_slope;
 			subdivisionZLength = x_z_slope == 0 ? 0 : subdivisionXLength / x_z_slope;
-		} else {
-			let y_x_slope = lineXLength/ lineYLength;
+		} else if (Math.abs(lineYLength) > Math.abs(lineXLength) && Math.abs(lineYLength) > Math.abs(lineZLength)) {
+			let y_x_slope = lineXLength / lineYLength;
 			let y_z_slope = lineZLength == 0 ? 0 : lineYLength / lineZLength;
 			subdivisionYLength = lineYLength / numberOfSubdivisions;
 			subdivisionXLength = y_x_slope == 0 ? 0 : subdivisionYLength / y_x_slope;
 			subdivisionZLength = y_z_slope == 0 ? 0 : subdivisionYLength / y_z_slope;
+		} else {
+			let z_x_slope = lineZLength / lineXLength;
+			let z_y_slope = lineYLength == 0 ? 0 : lineZLength / lineYLength;
+			subdivisionZLength = lineZLength / numberOfSubdivisions;
+			subdivisionXLength = z_x_slope == 0 ? 0 : subdivisionZLength / z_x_slope;
+			subdivisionYLength = z_y_slope == 0 ? 0 : subdivisionZLength / z_y_slope;
 		}
 		
 
