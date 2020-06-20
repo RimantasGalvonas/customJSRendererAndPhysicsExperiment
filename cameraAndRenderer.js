@@ -194,17 +194,17 @@ class Renderer {
 		let subdivisionYLength;
 		let subdivisionZLength;
 
-		if (Math.abs(lineXLength) > Math.abs(lineYLength) && Math.abs(lineXLength) > Math.abs(lineZLength)) { // Use the longest axis for slope calculation
+		if (Math.abs(lineXLength) >= Math.abs(lineYLength) && Math.abs(lineXLength) > Math.abs(lineZLength)) { // Use the longest axis for slope calculation
 			let x_y_slope = lineYLength / lineXLength;
 			let x_z_slope = lineZLength == 0 ? 0 : lineXLength / lineZLength;
 			subdivisionXLength = lineXLength / numberOfSubdivisions;
-			subdivisionYLength = x_y_slope == 0 ? 0 : subdivisionXLength / x_y_slope;
+			subdivisionYLength = x_y_slope == 0 ? 0 :  subdivisionXLength * x_y_slope;
 			subdivisionZLength = x_z_slope == 0 ? 0 : subdivisionXLength / x_z_slope;
 		} else if (Math.abs(lineYLength) > Math.abs(lineXLength) && Math.abs(lineYLength) > Math.abs(lineZLength)) {
 			let y_x_slope = lineXLength / lineYLength;
 			let y_z_slope = lineZLength == 0 ? 0 : lineYLength / lineZLength;
 			subdivisionYLength = lineYLength / numberOfSubdivisions;
-			subdivisionXLength = y_x_slope == 0 ? 0 : subdivisionYLength / y_x_slope;
+			subdivisionXLength = y_x_slope == 0 ? 0 : subdivisionYLength * y_x_slope;
 			subdivisionZLength = y_z_slope == 0 ? 0 : subdivisionYLength / y_z_slope;
 		} else {
 			let z_x_slope = lineZLength / lineXLength;
