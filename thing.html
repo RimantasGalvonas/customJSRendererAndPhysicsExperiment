@@ -45,9 +45,9 @@
 
 			var cameras = [];
 			var staticCamera = new Camera(0, 0, 1.6);
-			var chaseCamera = new Camera(0, 0, 1.6);
+			var chaseCamera = new Camera(0, -1, 1);
 			chaseCamera.rotationZ = 0;
-			chaseCamera.fieldOfView = 90;
+			chaseCamera.fieldOfView = 45;
 			playerThing.attachedCamera = chaseCamera;
 			cameras.push(staticCamera, chaseCamera);
 
