@@ -92,52 +92,52 @@ class Renderer {
 
         let lines = [
             {
-                ax: -5, ay: -15, az: 0,
-                bx: -5, by: -15, bz: 5
-            },
-            {
-                ax: -5, ay: -10, az: 5,
-                bx: -5, by: -10, bz: 0
-            },
-            {
-                ax: 0, ay: -15, az: 5,
-                bx: 0, by: -15, bz: 0
+                ax: 0, ay: -15, az: 0,
+                bx: 0, by: -15, bz: 5
             },
             {
                 ax: 0, ay: -10, az: 5,
                 bx: 0, by: -10, bz: 0
             },
             {
-                ax: -5, ay: -10, az: 0,
-                bx: 0, by: -10, bz: 0
+                ax: 5, ay: -15, az: 5,
+                bx: 5, by: -15, bz: 0
             },
             {
-                ax: -5, ay: -15, az: 0,
-                bx: 0, by: -15, bz: 0
+                ax: 5, ay: -10, az: 5,
+                bx: 5, by: -10, bz: 0
             },
             {
-                ax: -5, ay: -10, az: 0,
-                bx: -5, by: -15, bz: 0
+                ax: 0, ay: -10, az: 0,
+                bx: 5, by: -10, bz: 0
+            },
+            {
+                ax: 0, ay: -15, az: 0,
+                bx: 5, by: -15, bz: 0
             },
             {
                 ax: 0, ay: -10, az: 0,
                 bx: 0, by: -15, bz: 0
             },
             {
-                ax: -5, ay: -10, az: 5,
-                bx: 0, by: -10, bz: 5
+                ax: 5, ay: -10, az: 0,
+                bx: 5, by: -15, bz: 0
             },
             {
-                ax: -5, ay: -15, az: 5,
-                bx: 0, by: -15, bz: 5
+                ax: 0, ay: -10, az: 5,
+                bx: 5, by: -10, bz: 5
             },
             {
-                ax: -5, ay: -10, az: 5,
-                bx: -5, by: -15, bz: 5
+                ax: 0, ay: -15, az: 5,
+                bx: 5, by: -15, bz: 5
             },
             {
                 ax: 0, ay: -10, az: 5,
                 bx: 0, by: -15, bz: 5
+            },
+            {
+                ax: 5, ay: -10, az: 5,
+                bx: 5, by: -15, bz: 5
             }
 
 

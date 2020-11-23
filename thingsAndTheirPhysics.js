@@ -10,13 +10,14 @@ class Thing {
 	physicsModule = null;
 	attachedCamera = null;
 
-	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0) {
+	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0, lifetime = null) {
 		this.positionX = x;
 		this.positionY = y;
 		this.positionZ = z;
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
 		this.scaleZ = scaleZ;
+		this.lifetime = lifetime; // in number of frames or null for infinite
 	};
 
 	calculateNewPosition() { // TODO: observer pattern or something would be good here
