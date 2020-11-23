@@ -9,6 +9,7 @@ class Thing {
 	image = null;
 	physicsModule = null;
 	attachedCamera = null;
+	is3d = false;
 
 	constructor(x = 0, y = 0, z = 0, scaleX = 0, scaleY = 0, scaleZ = 0, lifetime = null) {
 		this.positionX = x;

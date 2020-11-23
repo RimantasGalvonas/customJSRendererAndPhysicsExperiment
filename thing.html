@@ -5,6 +5,7 @@
         <script src="cameraAndRenderer.js"></script>
         <script src="thingsAndTheirPhysics.js"></script>
         <script src="catThing.js"></script>
+        <script src="cuboidThing.js"></script>
         <script src="helpers.js"></script>
         <script src="controller.js"></script>
     </head>
@@ -49,6 +50,9 @@
             cameras.push(staticCamera, chaseCamera);
 
             objects.push(playerThing);
+
+            var cuboidThing = new CuboidThing(-15, 40, 0, 5, 5, 5);
+            objects.push(cuboidThing);
 
             var renderer = new Renderer(canvas, objects, chaseCamera);
             var currentCamera = 1;

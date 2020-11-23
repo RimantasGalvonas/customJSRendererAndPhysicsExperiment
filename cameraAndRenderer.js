@@ -30,10 +30,11 @@ class Renderer {
         this.drawHorizon();
         this.assignObjectsCoordinatesRelativeToCamera();
         this.drawGrid();
-        this.buildCube();
         this.buildCone();
 
         let sortedObjects = this.getObjectsSortedByPositionToCamera();
+
+        var self = this;
 
         sortedObjects.forEach((object) => {
             let xOffsetFromCamera = object.positionXRelativeToCamera;
@@ -41,6 +42,11 @@ class Renderer {
             let distanceFromCameraToObject = Math.hypot(xOffsetFromCamera, yOffsetFromCamera);
 
             if (!this.isPointWithinLineOfSight(object.positionX, object.positionY)) {
+                return;
+            }
+
+            if (object.is3d === true) { // TODO: should move the sprite rendering below the fuck out of here to its own fucking class. That would make the is3d property unnecessary
+                object.renderOntoCanvas(self);
                 return;
             }
 
@@ -78,79 +84,6 @@ class Renderer {
 
             currentDegree += step;
         }
-    }
-
-    buildCube() {
-        let startY;
-        let startZ;
-        let startPositionInView;
-
-        let endX;
-        let endY;
-        let endZ;
-        let endPositionInView;
-
-        let lines = [
-            {
-                ax: 0, ay: -15, az: 0,
-                bx: 0, by: -15, bz: 5
-            },
-            {
-                ax: 0, ay: -10, az: 5,
-                bx: 0, by: -10, bz: 0
-            },
-            {
-                ax: 5, ay: -15, az: 5,
-                bx: 5, by: -15, bz: 0
-            },
-            {
-                ax: 5, ay: -10, az: 5,
-                bx: 5, by: -10, bz: 0
-            },
-            {
-                ax: 0, ay: -10, az: 0,
-                bx: 5, by: -10, bz: 0
-            },
-            {
-                ax: 0, ay: -15, az: 0,
-                bx: 5, by: -15, bz: 0
-            },
-            {
-                ax: 0, ay: -10, az: 0,
-                bx: 0, by: -15, bz: 0
-            },
-            {
-                ax: 5, ay: -10, az: 0,
-                bx: 5, by: -15, bz: 0
-            },
-            {
-                ax: 0, ay: -10, az: 5,
-                bx: 5, by: -10, bz: 5
-            },
-            {
-                ax: 0, ay: -15, az: 5,
-                bx: 5, by: -15, bz: 5
-            },
-            {
-                ax: 0, ay: -10, az: 5,
-                bx: 0, by: -15, bz: 5
-            },
-            {
-                ax: 5, ay: -10, az: 5,
-                bx: 5, by: -15, bz: 5
-            }
-
-
-        ];
-
-        lines.forEach((line) => {
-            if (!this.isPointWithinLineOfSight(line.ax-20, line.ay+50) && !this.isPointWithinLineOfSight(line.bx-20, line.by+50)) {
-                return;
-            }
-
-            this.drawLineWithSubdivision(line.ax-20, line.ay+50, line.az, line.bx-20, line.by+50, line.bz, 'hsla(0, 0%, 0%, 0.5)');         
-        });
-
     }
 
     drawGrid() {
