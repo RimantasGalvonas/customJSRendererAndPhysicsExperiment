@@ -25,7 +25,7 @@ class Renderer {
         this.camera = camera;
     };
 
-    render() { // TODO: this function is a fucking mess for now and it does everything. Will need to be rewritten completely
+    render() {
         this.clearCanvas();
         this.drawHorizon();
         this.assignObjectsCoordinatesRelativeToCamera();
@@ -37,34 +37,11 @@ class Renderer {
         var self = this;
 
         sortedObjects.forEach((object) => {
-            let xOffsetFromCamera = object.positionXRelativeToCamera;
-            let yOffsetFromCamera = object.positionYRelativeToCamera;
-            let distanceFromCameraToObject = Math.hypot(xOffsetFromCamera, yOffsetFromCamera);
-
             if (!this.isPointWithinLineOfSight(object.positionX, object.positionY)) {
                 return;
             }
 
-            if (object.is3d === true) { // TODO: should move the sprite rendering below the fuck out of here to its own fucking class. That would make the is3d property unnecessary
-                object.renderOntoCanvas(self);
-                return;
-            }
-
-            // for checking: https://sizecalc.com/#distance=10meters&physical-size=5meters&perceived-size-units=degrees
-            let widthInPixels = this.getPerceivedScaleInPixels(object.scaleX, distanceFromCameraToObject);
-            let heightInPixels = this.getPerceivedScaleInPixels(object.scaleZ, yOffsetFromCamera);      
-            
-            let sinOfAngle = xOffsetFromCamera / Math.hypot(xOffsetFromCamera, yOffsetFromCamera);
-            let angleToCamera = MathHelper.radiansToDegrees(Math.asin(sinOfAngle));
-
-            let positionXInView = canvas.width * (this.camera.fieldOfView/2 + angleToCamera) / this.camera.fieldOfView - widthInPixels / 2;
-            
-            let zCenterPosition = canvas.height / 2 - heightInPixels;
-            let cameraAndObjectHeightDifference = object.positionZ - this.camera.positionZ;
-            let zOffset = this.getPerceivedScaleInPixels(cameraAndObjectHeightDifference, yOffsetFromCamera);
-            let positionZInView = zCenterPosition - zOffset;
-
-            object.renderOntoCanvas(this.context, this.canvas, positionXInView, positionZInView, widthInPixels, heightInPixels);
+            object.renderOntoCanvas(self);
         })
     };
 

@@ -1,4 +1,4 @@
-class CatThing extends Thing {
+class CatThing extends SpriteThing {
     animationFrame = 0;
     image = null;
     catMovedThisFrame = false;
@@ -20,13 +20,13 @@ class CatThing extends Thing {
         }
     };
 
-    renderOntoCanvas(context, canvas, positionXInView, positionZInView, widthInPixels, heightInPixels) {
-
+    renderOntoCanvas(renderer) {
         if (this.catMovedThisFrame) {
             //TODO: change animation frame
         }
 
-        context.drawImage(this.image, positionXInView, positionZInView, widthInPixels, heightInPixels);
-        
+        let positionAndDimensions = this.getSpritePositionAndDimensionsInView();
+
+        renderer.context.drawImage(this.image, positionAndDimensions.positionXInView, positionAndDimensions.positionZInView, positionAndDimensions.widthInPixels, positionAndDimensions.heightInPixels);  
     };
 }

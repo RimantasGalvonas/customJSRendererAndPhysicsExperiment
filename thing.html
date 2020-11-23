@@ -4,6 +4,7 @@
         <title>Thing</title>
         <script src="cameraAndRenderer.js"></script>
         <script src="thingsAndTheirPhysics.js"></script>
+        <script src="spriteThing.js"></script>
         <script src="catThing.js"></script>
         <script src="cuboidThing.js"></script>
         <script src="helpers.js"></script>
@@ -69,7 +70,7 @@
 
             // particle generator test
             setInterval(function() {
-                let thing = new Thing(0, 30, 5, 0.5, 0.5, 0.5, 600);
+                let thing = new SpriteThing(0, 30, 5, 0.5, 0.5, 0.5, 600);
                 let physicsModuleForThing = new PhysicsModuleForObject(thing);      
                 physicsModuleForThing.velocityZ = Math.random() > 0.5 ? Math.random() * 10 : Math.random() * -10;
                 physicsModuleForThing.velocityY = Math.random() > 0.5 ? Math.random() * 10 : Math.random() * -10;

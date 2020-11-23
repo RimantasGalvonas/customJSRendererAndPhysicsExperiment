@@ -1,6 +1,4 @@
 class CuboidThing extends Thing {
-    is3d = true;
-
     renderOntoCanvas(renderer) {
         let x1 = this.positionX - this.scaleX / 2;
         let x2 = this.positionX + this.scaleX / 2; // TODO: account for rotation in all of these
